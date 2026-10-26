@@ -1,0 +1,135 @@
+<?xml version='1.0' encoding='utf-8'?>
+<model version="NetLogo 7.0.4" snapToGrid="false">
+  <code>extensions [csv]
+__includes ["datos.nls" "vista.nls" "controlador.nls"]
+globals [poblacion-total tiempo-maximo datos-java datos-referencia indice estado-mensaje]
+</code>
+  <widgets>
+    <!-- CABECERA PRINCIPAL -->
+    <note x="10" y="8" width="830" height="32" fontSize="18" textColorLight="-16777216" textColorDark="-1" backgroundLight="0" backgroundDark="0" markdown="false">📊 PANEL DE CONTROL SIR | Java &amp; NetLogo 7.0.4</note>
+    <note x="10" y="40" width="830" height="22" fontSize="11" textColorLight="-16777216" textColorDark="-1" backgroundLight="0" backgroundDark="0" markdown="false">Modelo Epidemiológico: N=100 | S0=95 | I0=5 | β=0.30 | γ=0.10 | Pasos=100 | Fuente: java_simulado.csv</note>
+
+    <!-- SECCIÓN 1: CONTROLES DE ARCHIVO Y ANIMACIÓN -->
+    <note x="10" y="65" width="405" height="18" fontSize="10" textColorLight="-16777216" textColorDark="-1" backgroundLight="0" backgroundDark="0" markdown="false">📁 GESTIÓN DE ARCHIVOS Y DATOS</note>
+    <button x="10" y="85" width="195" height="30" forever="false" kind="Observer" disableUntilTicks="false" display="📂 CARGAR JAVA">cargar-java</button>
+    <button x="210" y="85" width="205" height="30" forever="false" kind="Observer" disableUntilTicks="false" display="🔍 OTRO PRINCIPAL">elegir-java</button>
+    <button x="10" y="120" width="195" height="30" forever="false" kind="Observer" disableUntilTicks="false" display="📂 CARGAR REFERENCIA">cargar-referencia</button>
+    <button x="210" y="120" width="205" height="30" forever="false" kind="Observer" disableUntilTicks="false" display="🔍 OTRA REFERENCIA">elegir-referencia</button>
+
+    <note x="430" y="65" width="410" height="18" fontSize="10" textColorLight="-16777216" textColorDark="-1" backgroundLight="0" backgroundDark="0" markdown="false">▶️ REPRODUCCIÓN Y EXPORTACIÓN</note>
+    <button x="430" y="85" width="125" height="30" forever="false" kind="Observer" disableUntilTicks="false" display="🔄 REINICIAR">reiniciar</button>
+    <button x="560" y="85" width="135" height="30" forever="true" kind="Observer" disableUntilTicks="false" display="▶️ ANIMAR">avanzar</button>
+    <button x="700" y="85" width="140" height="30" forever="false" kind="Observer" disableUntilTicks="false" display="⚡ VER COMPLETO">mostrar-completo</button>
+    <button x="430" y="120" width="410" height="30" forever="false" kind="Observer" disableUntilTicks="false" display="📷 EXPORTAR IMAGEN PNG">exportar-interfaz</button>
+
+    <!-- SECCIÓN 2: MONITORES DE VALORES -->
+    <!-- Columna Izquierda: Simulacion Principal -->
+    <note x="10" y="158" width="405" height="18" fontSize="10" textColorLight="-16777216" textColorDark="-1" backgroundLight="0" backgroundDark="0" markdown="false">🟦 SIMULACIÓN PRINCIPAL (JAVA)</note>
+    <monitor x="10" y="178" width="95" height="42" precision="0" fontSize="10" display="⏱️ Paso">valor-java 0</monitor>
+    <monitor x="110" y="178" width="95" height="42" precision="0" fontSize="10" display="🔵 S (Susc.)">valor-java 1</monitor>
+    <monitor x="210" y="178" width="95" height="42" precision="0" fontSize="10" display="🔴 I (Infec.)">valor-java 2</monitor>
+    <monitor x="310" y="178" width="105" height="42" precision="0" fontSize="10" display="🟢 R (Recup.)">valor-java 3</monitor>
+
+    <!-- Columna Derecha: Simulacion Referencia -->
+    <note x="430" y="158" width="410" height="18" fontSize="10" textColorLight="-16777216" textColorDark="-1" backgroundLight="0" backgroundDark="0" markdown="false">🟧 SIMULACIÓN REFERENCIA (SEGUNDA EJECUCIÓN)</note>
+    <monitor x="430" y="178" width="95" height="42" precision="0" fontSize="10" display="⏱️ Paso Ref">valor-referencia 0</monitor>
+    <monitor x="530" y="178" width="95" height="42" precision="0" fontSize="10" display="🔵 S Ref">valor-referencia 1</monitor>
+    <monitor x="630" y="178" width="95" height="42" precision="0" fontSize="10" display="🔴 I Ref">valor-referencia 2</monitor>
+    <monitor x="730" y="178" width="110" height="42" precision="0" fontSize="10" display="🟢 R Ref">valor-referencia 3</monitor>
+
+    <!-- SECCIÓN 3: GRÁFICAS DE EVOLUCIÓN TEMPORAL -->
+    <plot x="10" y="226" width="405" height="230" xMin="0" xMax="100" yMin="0" yMax="100" autoPlotX="false" autoPlotY="false" legend="true" display="📈 Evolución Principal (S-I-R)" xAxis="Tiempo (pasos)" yAxis="Población" sizeVersion="1">
+      <setup />
+      <update />
+      <pen display="S (Susceptibles)" interval="1.0" mode="0" color="-14326805" legend="true">
+        <setup />
+        <update />
+      </pen>
+      <pen display="I (Infectados)" interval="1.0" mode="0" color="-1096636" legend="true">
+        <setup />
+        <update />
+      </pen>
+      <pen display="R (Recuperados)" interval="1.0" mode="0" color="-15681151" legend="true">
+        <setup />
+        <update />
+      </pen>
+    </plot>
+
+    <plot x="430" y="226" width="410" height="230" xMin="0" xMax="100" yMin="0" yMax="100" autoPlotX="false" autoPlotY="false" legend="true" display="📈 Evolución Referencia (S-I-R)" xAxis="Tiempo (pasos)" yAxis="Población" sizeVersion="1">
+      <setup />
+      <update />
+      <pen display="S (Susceptibles)" interval="1.0" mode="0" color="-14326805" legend="true">
+        <setup />
+        <update />
+      </pen>
+      <pen display="I (Infectados)" interval="1.0" mode="0" color="-1096636" legend="true">
+        <setup />
+        <update />
+      </pen>
+      <pen display="R (Recuperados)" interval="1.0" mode="0" color="-15681151" legend="true">
+        <setup />
+        <update />
+      </pen>
+    </plot>
+
+    <!-- SECCIÓN 4: GRÁFICAS COMPARATIVAS INDIVIDUALES -->
+    <note x="10" y="462" width="830" height="18" fontSize="10" textColorLight="-16777216" textColorDark="-1" backgroundLight="0" backgroundDark="0" markdown="false">📊 COMPARATIVA DIRECTA ENTRE PRINCIPAL Y REFERENCIA</note>
+
+    <plot x="10" y="482" width="265" height="200" xMin="0" xMax="100" yMin="0" yMax="100" autoPlotX="false" autoPlotY="false" legend="true" display="🔵 Comparar Susceptibles" xAxis="Tiempo" yAxis="Casos" sizeVersion="1">
+      <setup />
+      <update />
+      <pen display="Principal" interval="1.0" mode="0" color="-14326805" legend="true">
+        <setup />
+        <update />
+      </pen>
+      <pen display="Referencia" interval="1.0" mode="0" color="-680437" legend="true">
+        <setup />
+        <update />
+      </pen>
+    </plot>
+
+    <plot x="285" y="482" width="265" height="200" xMin="0" xMax="100" yMin="0" yMax="100" autoPlotX="false" autoPlotY="false" legend="true" display="🔴 Comparar Infectados" xAxis="Tiempo" yAxis="Casos" sizeVersion="1">
+      <setup />
+      <update />
+      <pen display="Principal" interval="1.0" mode="0" color="-1096636" legend="true">
+        <setup />
+        <update />
+      </pen>
+      <pen display="Referencia" interval="1.0" mode="0" color="-680437" legend="true">
+        <setup />
+        <update />
+      </pen>
+    </plot>
+
+    <plot x="560" y="482" width="280" height="200" xMin="0" xMax="100" yMin="0" yMax="100" autoPlotX="false" autoPlotY="false" legend="true" display="🟢 Comparar Recuperados" xAxis="Tiempo" yAxis="Casos" sizeVersion="1">
+      <setup />
+      <update />
+      <pen display="Principal" interval="1.0" mode="0" color="-15681151" legend="true">
+        <setup />
+        <update />
+      </pen>
+      <pen display="Referencia" interval="1.0" mode="0" color="-680437" legend="true">
+        <setup />
+        <update />
+      </pen>
+    </plot>
+
+    <!-- ESTADO DEL SISTEMA -->
+    <monitor x="10" y="688" width="830" height="42" precision="0" fontSize="10" display="📌 Estado del Sistema / Mensajes">estado-mensaje</monitor>
+    <view x="10" y="736" width="1" height="1" minPxcor="0" maxPxcor="0" minPycor="0" maxPycor="0" patchSize="1" wrappingAllowedX="false" wrappingAllowedY="false" fontSize="10" updateMode="1" showTickCounter="false" frameRate="15" />
+  </widgets>
+  <info># APE 04 - Visualizador CSV de Java
+Java ejecuta el modelo SIR y escribe java_simulado.csv. NetLogo solo carga, valida y representa sus filas.
+No hay generacion aleatoria, contagios, recuperaciones ni modelo SIR autonomo en NetLogo.
+El segundo archivo java_referencia.csv es opcional y tambien lo genera Java, con otra semilla.
+Las cinco graficas muestran ambas evoluciones y comparacion de S, I y R.
+REINICIAR + ANIMAR reproduce las filas ya existentes; no recalcula los datos.
+Mantener el .nlogox, los tres .nls y los CSV juntos. Ver LEEME_PRIMERO.md en la raiz.
+</info>
+  <turtleShapes>
+    <shape name="default" rotatable="true" editableColorIndex="0">
+      <circle color="-7500403" filled="true" marked="true" x="0" y="0" diameter="300" />
+    </shape>
+  </turtleShapes>
+  <previewCommands>startup</previewCommands>
+</model>
